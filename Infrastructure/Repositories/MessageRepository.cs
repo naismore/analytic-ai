@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    internal class MessageRepository(DTADbContext context) : IMessageRepository
+    public class MessageRepository(DTADbContext context) : IMessageRepository
     {
         public async Task<IReadOnlyCollection<Message>> GetListAsync() =>
             await context.Messages.ToListAsync();

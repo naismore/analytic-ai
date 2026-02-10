@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    internal class AnalyticsToolRepository(DTADbContext context) : IAnalyticsToolRepository
+    public class AnalyticsToolRepository(DTADbContext context) : IAnalyticsToolRepository
     {
         public async Task<IReadOnlyCollection<AnalyticsTool>> GetListAsync() =>
             await context.AnalyticsTools.ToListAsync();
@@ -25,5 +25,6 @@ namespace Infrastructure.Repositories
             context.AnalyticsTools.Remove(analyticsTool);
         public async Task<int> SaveChangesAsync() =>
             await context.SaveChangesAsync();
+
     }
 }

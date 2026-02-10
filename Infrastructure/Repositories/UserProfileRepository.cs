@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    internal class UserProfileRepository(DTADbContext context) : IUserProfileRepository
+    public class UserProfileRepository(DTADbContext context) : IUserProfileRepository
     {
         public async Task<IReadOnlyCollection<UserProfile>> GetListAsync() =>
             await context.UserProfiles.ToListAsync();

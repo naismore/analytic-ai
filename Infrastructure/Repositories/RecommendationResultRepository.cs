@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    internal class RecommendationResultRepository(DTADbContext context) : IRecommendationResultRepository
+    public class RecommendationResultRepository(DTADbContext context) : IRecommendationResultRepository
     {
         public async Task<IReadOnlyCollection<RecommendationResult>> GetListAsync() =>
             await context.RecommendationResults.ToListAsync();
