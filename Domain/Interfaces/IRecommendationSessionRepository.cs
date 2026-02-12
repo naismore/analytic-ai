@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IRecommendationSessionRepository
     {
         Task<IReadOnlyCollection<RecommendationSession>> GetListAsync();
-        Task<RecommendationSession> GetByIdAsync(int id);
+        Task<RecommendationSession?> GetByIdAsync(int id);
         Task InsertAsync(RecommendationSession recommendationSession);
         void Update(RecommendationSession recommendationSession);
         void Delete(RecommendationSession recommendationSession);

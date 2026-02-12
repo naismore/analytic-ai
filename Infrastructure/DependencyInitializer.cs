@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 //using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Infrastructure;
-public class DependencyInititalizer
+public static class DependencyInititalizer
 {
-    public static void AddInfrastructureServices(IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Получаем строку подключения из файла Web/appsettings.json через configuration
         var connString = configuration.GetConnectionString("PostgreSQL");

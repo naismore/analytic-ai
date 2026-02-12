@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IUserRepository
     {
         Task<IReadOnlyCollection<User>> GetListAsync();
-        Task<User> GetByIdAsync(int id);
+        Task<User?> GetByIdAsync(int id);
         Task InsertAsync(User user);
         void Update(User user);
         void Delete(User user);

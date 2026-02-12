@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IMessageRepository
     {
         Task<IReadOnlyCollection<Message>> GetListAsync();
-        Task<Message> GetByIdAsync(int id);
+        Task<Message?> GetByIdAsync(int id);
         Task InsertAsync(Message message);
         void Update(Message message);
         void Delete(Message message);

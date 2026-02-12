@@ -11,7 +11,7 @@ namespace Domain.Interfaces
     public interface IAnalyticsToolRepository
     {
         public Task<IReadOnlyCollection<AnalyticsTool>> GetListAsync();
-        public Task<AnalyticsTool> GetByIdAsync(int id);
+        public Task<AnalyticsTool?> GetByIdAsync(int id);
         public Task InsertAsync(AnalyticsTool analyticsTool);
         public void Update(AnalyticsTool analyticsTool);
         public void Delete(AnalyticsTool analyticsTool);

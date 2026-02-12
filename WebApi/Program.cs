@@ -1,3 +1,7 @@
+using Application;
+using Infrastructure;
+using WebApi.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +11,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddApplicationServices();
+
 var app = builder.Build();
+
+app.ApplyMigrations();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,5 +30,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

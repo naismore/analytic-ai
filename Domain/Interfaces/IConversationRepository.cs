@@ -10,7 +10,7 @@ namespace Domain.Interfaces
     public interface IConversationRepository
     {
         Task<IReadOnlyCollection<Conversation>> GetListAsync();
-        Task<Conversation> GetByIdAsync(int id);
+        Task<Conversation?> GetByIdAsync(int id);
         Task InsertAsync(Conversation conversation);
         void Update(Conversation conversation);
         void Delete(Conversation conversation);
