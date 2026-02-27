@@ -25,6 +25,5 @@ namespace Infrastructure.Repositories
             context.AnalyticsTools.Remove(analyticsTool);
         public async Task<int> SaveChangesAsync() =>
             await context.SaveChangesAsync();
-
     }
 }

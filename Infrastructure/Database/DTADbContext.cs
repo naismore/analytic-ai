@@ -1,11 +1,19 @@
 ﻿using Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Infrastructure.Database
 {
-    public class DTADbContext(DbContextOptions<DTADbContext> options) : DbContext(options)
+    public class DTADbContext : IdentityDbContext<ApplicationUser>
     {
+        public DTADbContext(DbContextOptions<DTADbContext> options)
+        : base(options)
+        {
+        }
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserProfile> UserProfiles { get; set; } = null!;
         public DbSet<AnalyticsTool> AnalyticsTools { get; set; } = null!;

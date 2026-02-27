@@ -8,6 +8,7 @@
         public DateTime CreatedAt { get; set; }
 
         public UserProfile Profile { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
         public List<Conversation> Conversations { get; set; } = new();
         public List<RecommendationSession> RecommendationSessions { get; set; } = new();

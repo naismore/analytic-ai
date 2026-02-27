@@ -1,5 +1,9 @@
-﻿using Infrastructure.Database;
+﻿using Domain.Roles;
+using Infrastructure.Database;
+using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace WebApi.Configuration
 {
@@ -11,6 +15,22 @@ namespace WebApi.Configuration
             {
                 var db = scope.ServiceProvider.GetRequiredService<DTADbContext>();
                 db.Database.Migrate();
+            }
+        }
+
+        public static async Task CreateIdentityRoles(this WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+                if (!await roleManager.RoleExistsAsync(UserRoles.Member))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Member));
+                }
             }
         }
     }
