@@ -1,0 +1,97 @@
+@startuml
+' Цветной вариант с акцентами на ролях
+!define USER #Gold
+!define SYSTEM #LightBlue
+!define DATABASE #LightGreen
+!define ADMIN #LightCoral
+
+title <size:18><b>БИЗНЕС-ПРОЦЕСС: Экспертная система подбора инструментов аналитики</b></size>
+
+' Определение ролей с цветами
+actor "Пользователь" as user USER
+participant "Веб-интерфейс" as ui SYSTEM
+participant "Экспертная система" as expert SYSTEM
+database "База данных\nинструментов" as db DATABASE
+database "База знаний\n(правила)" as rules DATABASE
+actor "Администратор" as admin ADMIN
+
+' Основной поток
+user -> ui: 1. Запрос на подбор
+ui -> expert: 2. Инициализация сессии
+
+' Цикл опроса
+group Опрос пользователя
+  loop 7 раз
+    expert -> ui: 3. Отобразить вопрос
+    ui -> user: Показать вопрос
+    user -> ui: 4. Ответ на вопрос
+    ui -> expert: Передать ответ
+    expert -> expert: 5. Сохранить ответ
+  end
+end
+
+' Обработка данных
+expert -> expert: 6. Сформировать профиль
+expert -> db: 7. Запросить инструменты
+db -> expert: Список инструментов
+expert -> rules: 8. Запросить правила
+rules -> expert: Активные правила
+
+group Генерация рекомендаций
+  expert -> expert: 9. Фильтрация по критериям
+  expert -> expert: 10. Применение правил
+  expert -> expert: 11. Ранжирование
+  note right
+    Алгоритм:
+    • Фильтр → кандидаты
+    • Правила → баллы
+    • Ранжирование → топ-3
+  end note
+  expert -> expert: 12. Выбор топ-3
+  expert -> expert: 13. Формирование обоснования
+end
+
+expert -> ui: 14. Результаты
+ui -> user: 15. Отображение рекомендаций
+
+' Взаимодействие с результатами
+group Работа с результатами
+  alt Сохранить
+    user -> ui: 16. Сохранить
+    ui -> expert: Запрос на сохранение
+    expert -> expert: Генерация ссылки
+    expert -> ui: Уникальная ссылка
+    ui -> user: Показать ссылку
+  else Экспорт PDF
+    user -> ui: 17. Экспорт PDF
+    ui -> expert: Запрос PDF
+    expert -> expert: Формирование отчета
+    expert -> ui: PDF-файл
+    ui -> user: Скачивание
+  else Сравнить
+    user -> ui: 18. Сравнить
+    ui -> expert: Запрос сравнения
+    expert -> expert: Создание таблицы
+    expert -> ui: Таблица сравнения
+    ui -> user: Отобразить
+  end
+end
+
+user -> ui: 19. Оценка рекомендаций
+ui -> expert: Сохранить фидбек
+expert -> expert: 20. Анализ точности
+
+' Административный цикл
+admin -> admin: Периодический анализ
+admin -> rules: 21. Обновление правил
+admin -> db: 22. Добавление/обновление инструментов
+
+note right of admin
+  Задачи администратора:
+  • Мониторинг точности
+  • Обновление базы
+  • Анализ отзывов
+  • Настройка правил
+end note
+
+@enduml
