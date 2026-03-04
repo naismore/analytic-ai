@@ -1,5 +1,5 @@
-﻿using Application.Results;
-using Application.Abstract;
+﻿using Application.Abstract;
+using Application.CQRs.Results;
 
 namespace Application.CQRs.Users.Commands
 {

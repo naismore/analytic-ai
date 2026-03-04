@@ -1,4 +1,4 @@
-﻿namespace Application.Results;
+﻿namespace Application.CQRs.Results;
 
 public class Result
 {

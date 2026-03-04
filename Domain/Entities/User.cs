@@ -7,24 +7,17 @@ public class User
     public UserStatus UserStatus { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public UserProfile Profile { get; set; }
+    public UserProfile? Profile { get; set; }
 
-<<<<<<< HEAD
     public List<Conversation> Conversations { get; set; } = new();
     public List<RecommendationSession> RecommendationSessions { get; set; } = new();
-}
-=======
-        public List<Conversation> Conversations { get; set; } = new();
-        public List<RecommendationSession> RecommendationSessions { get; set; } = new();
 
-        public static User Create(UserStatus userStatus, DateTime createdAt)
+    public static User Create(UserStatus userStatus, DateTime createdAt)
+    {
+        return new User()
         {
-            return new User()
-            {
-                UserStatus = userStatus,
-                CreatedAt = createdAt
-            };
-        }
+            UserStatus = userStatus,
+            CreatedAt = createdAt
+        };
     }
 }
->>>>>>> feature/cqrs

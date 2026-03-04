@@ -1,8 +1,10 @@
-﻿using Domain.Interfaces;
+﻿using Application.Abstract;
+using Domain.Interfaces;
 using Infrastructure.Database;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Models;
+using Infrastructure.Identity.Services;
 using Infrastructure.Identity.Settings;
 using Infrastructure.Repositories;
 //using Microsoft.AspNetCore.Identity;
@@ -23,11 +25,10 @@ public static class DependencyInititalizer
 
         services.AddDbContext<AppIdentityDbContext>(options => options.UseNpgsql(connString));
 
-        services.AddIdentityCore<ApplicationUser>(options =>
+        services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {
             IdentityExtensions.ConfigureIdentityOptions(options, identitySettings); // Конфигурируем identity с помощью appsettings.json
         })
-        .AddRoles<ApplicationRole>() // Добавляем роли
         .AddEntityFrameworkStores<AppIdentityDbContext>(); // Регистрируем в DI-контейнере готовые репозитории для работы с User и Roles
 
         // Регистрируем в зависимости наш контекст для базы данных
@@ -44,5 +45,6 @@ public static class DependencyInititalizer
         services.AddScoped<IRecommendationSessionRepository, RecommendationSessionRepository>();
         services.AddScoped<IUserProfileRepository, UserProfileRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAuthService, AuthService>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Application.Abstract;
+using Application.CQRs.Results;
 using Application.CQRs.Users.Commands;
-using Application.Results;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -24,7 +24,7 @@ namespace Application.CQRs.Users.Handlers
                 return Result.Success();
             }
 
-            return Result.Failure("Не удалось удалить пользователя из базы данных");
+            return Result<int>.Failure("Не удалось удалить пользователя из базы данных");
         }
     }
 }

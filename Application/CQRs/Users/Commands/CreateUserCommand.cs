@@ -1,5 +1,4 @@
 ﻿using Application.Abstract;
-using Application.Users.Dtos;
 using Domain.Entities;
 
 namespace Application.CQRs.Users.Commands

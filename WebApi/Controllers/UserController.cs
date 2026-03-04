@@ -1,24 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.CQRs.Identity.Commands;
+using Application.CQRs.Identity.Dto;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController(IMediator mediator) : ControllerBase
     {
         //private UsersService _usersService;
 
-        //[HttpPost("register")]
-        //public async Task<IResult> Register([FromBody] UserRegistrationDto userRegistrationDTO)
-        //{
-        //    IdentityResult registrationResult = await _usersService.Register(userRegistrationDTO);
-        //    if (!registrationResult.Succeeded)
-        //    {
-        //        Results.BadRequest(registrationResult.Errors);
-        //    }
+        [HttpPost("register")]
+        public async Task<IResult> Register([FromBody] UserAuthDto userDto)
+        {
+            var command = new RegisterUserCommand(userDto.Username, userDto.Password);
+            var dto = await mediator.Send(command);
 
-        //    return Results.Ok();
-        //}
+            return Results.Ok();
+        }
 
         //[HttpPost("login")]
         //public async Task<IResult> Login([FromBody] UserLoginDTO userLoginDTO)
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         //        return Results.Unauthorized();
         //    }
 
-            
+
         //}
 
         /*public static void MapEndpoint(IEndpointRouteBuilder app)

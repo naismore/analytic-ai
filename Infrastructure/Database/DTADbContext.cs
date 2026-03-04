@@ -1,14 +1,10 @@
 ﻿using Domain.Entities;
-using Infrastructure.Identity.Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace Infrastructure.Database
 {
     public class DTADbContext(DbContextOptions<DTADbContext> options) : DbContext(options)
     {
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<UserProfile> UserProfiles { get; set; } = null!;
         public DbSet<AnalyticsTool> AnalyticsTools { get; set; } = null!;

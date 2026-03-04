@@ -1,4 +1,4 @@
-﻿using Application.Results;
+﻿using Application.CQRs.Results;
 
 public class Result<T> : Result
 {
