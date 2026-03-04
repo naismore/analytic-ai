@@ -21,11 +21,6 @@ namespace Infrastructure.Database.Configurations
                    .WithOne(p => p.User)
                    .HasForeignKey<UserProfile>(p => p.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasOne(u => u.ApplicationUser)
-                   .WithOne(a => a.User)
-                   .HasForeignKey<ApplicationUser>(a => a.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

@@ -1,12 +1,4 @@
-﻿using Domain.DTO;
-using Domain.Entities;
-using Domain.Roles;
-using Infrastructure.Database;
-using Infrastructure.Repositories;
-using Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
@@ -14,35 +6,33 @@ namespace WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private UsersService _usersService;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly DTADbContext _dbContext;
+        //private UsersService _usersService;
 
-        [HttpPost("register")]
-        public async Task<IResult> Register([FromBody] UserRegistrationDTO userRegistrationDTO)
-        {
-            IdentityResult registrationResult = await _usersService.Register(userRegistrationDTO);
-            if (!registrationResult.Succeeded)
-            {
-                Results.BadRequest(registrationResult.Errors);
-            }
+        //[HttpPost("register")]
+        //public async Task<IResult> Register([FromBody] UserRegistrationDto userRegistrationDTO)
+        //{
+        //    IdentityResult registrationResult = await _usersService.Register(userRegistrationDTO);
+        //    if (!registrationResult.Succeeded)
+        //    {
+        //        Results.BadRequest(registrationResult.Errors);
+        //    }
 
-            return Results.Ok();
-        }
+        //    return Results.Ok();
+        //}
 
-        [HttpPost("login")]
-        public async Task<IResult> Login([FromBody] UserLoginDTO userLoginDTO)
-        {
-            ApplicationUser applicationUser = await _userManager.FindByEmailAsync(userLoginDTO.Email);
-            bool checkPasswordResult = await _userManager.CheckPasswordAsync(applicationUser, userLoginDTO.Password);
+        //[HttpPost("login")]
+        //public async Task<IResult> Login([FromBody] UserLoginDTO userLoginDTO)
+        //{
+        //    ApplicationUser applicationUser = await _userManager.FindByEmailAsync(userLoginDTO.Email);
+        //    bool checkPasswordResult = await _userManager.CheckPasswordAsync(applicationUser, userLoginDTO.Password);
 
-            if (!checkPasswordResult || applicationUser == null)
-            {
-                return Results.Unauthorized();
-            }
+        //    if (!checkPasswordResult || applicationUser == null)
+        //    {
+        //        return Results.Unauthorized();
+        //    }
 
             
-        }
+        //}
 
         /*public static void MapEndpoint(IEndpointRouteBuilder app)
         {

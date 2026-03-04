@@ -1,14 +1,14 @@
-﻿using Domain.Entities;
+﻿using Infrastructure.Identity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Database.Configurations
+namespace Infrastructure.Identity.Data.Config
 {
     public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.ToTable("application_users");
+            builder.ToTable("users");
         }
     }
 }
