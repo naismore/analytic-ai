@@ -1,5 +1,4 @@
 ﻿using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -19,6 +18,7 @@ namespace Infrastructure.Database
         public DbSet<AnalyticsTool> AnalyticsTools { get; set; } = null!;
         public DbSet<RecommendationSession> RecommendationSessions { get; set; } = null!;
         public DbSet<RecommendationResult> RecommendationResults { get; set; } = null!;
+        public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         public DbSet<Conversation> Conversations { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)

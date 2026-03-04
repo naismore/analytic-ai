@@ -3,6 +3,7 @@ using Domain.Entities;
 using Domain.Roles;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,76 +14,20 @@ namespace WebApi.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private UsersService _usersService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly DTADbContext _dbContext;
-        public record Request(string Email, string UserName, string Password);
 
         [HttpPost("register")]
         public async Task<IResult> Register([FromBody] UserRegistrationDTO userRegistrationDTO)
         {
-            using var transaction = await _dbContext.Database.BeginTransactionAsync();
-
-            try
+            IdentityResult registrationResult = await _usersService.Register(userRegistrationDTO);
+            if (!registrationResult.Succeeded)
             {
-                var user = new User
-                {
-                    UserStatus = UserStatus.Active,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                var applicationUser = new ApplicationUser
-                {
-                    Email = userRegistrationDTO.Email,
-                    UserName = userRegistrationDTO.Email,
-                    User = user
-                };
-
-                var userProfile = new UserProfile
-                {
-                    User = user,
-                    SkillLevel = SkillLevel.Junior,
-                    DataVolume = 0,
-                    LastUpdated = DateTime.UtcNow
-                };
-
-                user.ApplicationUser = applicationUser;
-                user.Profile = userProfile;
-
-                UserRepository userRepository = new UserRepository(_dbContext);
-                UserProfileRepository userProfileRepository = new UserProfileRepository(_dbContext);
-
-                await userRepository.InsertAsync(user);
-                await userProfileRepository.InsertAsync(userProfile);
-
-                IdentityResult createUserResult = await _userManager.CreateAsync(applicationUser, userRegistrationDTO.Password);
-
-                if (!createUserResult.Succeeded)
-                {
-                    return Results.BadRequest(createUserResult.Errors);
-                }
-
-                IdentityResult addToRoleResult = await _userManager.AddToRoleAsync(applicationUser, UserRoles.Member);
-                if (!addToRoleResult.Succeeded)
-                {
-                    return Results.BadRequest(addToRoleResult.Errors);
-                }
-
-                await _dbContext.SaveChangesAsync();
-
-                await transaction.CommitAsync();
-
-                return Results.Ok(new
-                {
-                    UserId = user.Id,
-                    ApplicationUserId = applicationUser.Id,
-                    Email = applicationUser.Email
-                });
+                Results.BadRequest(registrationResult.Errors);
             }
-            catch (Exception)
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+
+            return Results.Ok();
         }
 
         [HttpPost("login")]
@@ -96,7 +41,7 @@ namespace WebApi.Controllers
                 return Results.Unauthorized();
             }
 
-
+            
         }
 
         /*public static void MapEndpoint(IEndpointRouteBuilder app)

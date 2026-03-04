@@ -27,6 +27,7 @@ public static class DependencyInititalizer
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IRecommendationResultRepository, RecommendationResultRepository>();
         services.AddScoped<IRecommendationSessionRepository, RecommendationSessionRepository>();
+        services.AddScoped<IRefreshTokenRepostiory, RefreshTokenRepository>();
         services.AddScoped<IUserProfileRepository, UserProfileRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
     }
