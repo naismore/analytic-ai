@@ -1,4 +1,6 @@
-﻿namespace Application.Abstract
+﻿using Application.Models;
+
+namespace Application.Abstract
 {
     public interface IAuthService
     {
@@ -8,7 +10,7 @@
         int userId,
         CancellationToken cancellationToken = default);
 
-        Task<(bool success, int userId, string token, string error)> LoginAsync(
+        Task<(bool success, int userId, TokenResponse tokens, string[] errors)> LoginAsync(
             string email,
             string password,
             CancellationToken cancellationToken = default);

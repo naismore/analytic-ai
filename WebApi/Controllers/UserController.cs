@@ -1,6 +1,4 @@
-﻿using Application.CQRs.Identity.Commands;
-using Application.CQRs.Identity.Dto;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -11,14 +9,6 @@ namespace WebApi.Controllers
     {
         //private UsersService _usersService;
 
-        [HttpPost("register")]
-        public async Task<IResult> Register([FromBody] UserAuthDto userDto)
-        {
-            var command = new RegisterUserCommand(userDto.Username, userDto.Password);
-            var dto = await mediator.Send(command);
-
-            return Results.Ok();
-        }
 
         //[HttpPost("login")]
         //public async Task<IResult> Login([FromBody] UserLoginDTO userLoginDTO)

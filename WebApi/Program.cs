@@ -1,6 +1,7 @@
 //using Application;
 using Application;
 using Infrastructure;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,15 @@ builder.Services.AddAuthorization();
 //            }
 //        };
 //    });
+
+var applicationAssembly = typeof(DependencyInitializer).Assembly;
+var webApiAssembly = Assembly.GetExecutingAssembly();
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddMaps(applicationAssembly);
+    cfg.AddMaps(webApiAssembly);
+});
+
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
