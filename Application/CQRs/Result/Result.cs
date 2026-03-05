@@ -1,0 +1,27 @@
+﻿namespace Application.CQRs.Results;
+
+public class Result
+{
+    public bool IsSuccess { get; }
+    public bool IsFailure => !IsSuccess;
+    public string? Error { get; }
+    public string? ErrorCode { get; }
+
+    protected Result(bool isSuccess, string? error, string? errorCode)
+    {
+        IsSuccess = isSuccess;
+        Error = error;
+        ErrorCode = errorCode;
+    }
+
+    public static Result Success() => new(true, null, null);
+
+    public static Result Failure(string error, string? errorCode = null)
+        => new(false, error, errorCode);
+
+    public static Result<T> Success<T>(T value)
+        => Result<T>.Success(value);
+
+    public static Result<T> Failure<T>(string error, string? errorCode = null)
+        => Result<T>.Failure(error, errorCode);
+}
