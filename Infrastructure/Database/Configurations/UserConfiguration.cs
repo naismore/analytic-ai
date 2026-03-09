@@ -17,10 +17,6 @@ namespace Infrastructure.Database.Configurations
             builder.Property(u => u.CreatedAt)
                    .IsRequired();
 
-            builder.HasOne(u => u.Profile)
-                   .WithOne(p => p.User)
-                   .HasForeignKey<UserProfile>(p => p.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

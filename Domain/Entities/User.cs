@@ -7,9 +7,6 @@ public class User
     public UserStatus UserStatus { get; set; }
     public DateTime CreatedAt { get; set; }
 
-    public UserProfile? Profile { get; set; }
-
-    public List<Conversation> Conversations { get; set; } = new();
     public List<RecommendationSession> RecommendationSessions { get; set; } = new();
 
     public static User Create(UserStatus userStatus, DateTime createdAt)
