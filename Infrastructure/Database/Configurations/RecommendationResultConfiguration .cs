@@ -11,8 +11,6 @@ namespace Infrastructure.Database.Configurations
             builder.ToTable("recommendation_results");
             builder.HasKey(r => r.Id);
 
-            builder.Property(r => r.Rank)
-                   .IsRequired();
 
             builder.Property(r => r.Confidence)
                    .IsRequired();
@@ -27,7 +25,6 @@ namespace Infrastructure.Database.Configurations
                    .HasForeignKey(r => r.ToolId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(r => new { r.SessionId, r.Rank });
         }
     }
 

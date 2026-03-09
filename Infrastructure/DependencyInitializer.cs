@@ -96,11 +96,9 @@ public static class DependencyInititalizer
         });
 
         services.AddScoped<IAnalyticsToolRepository, AnalyticsToolRepository>();
-        services.AddScoped<IConversationRepository, ConversationRepository>();
-        services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IRecommendationResultRepository, RecommendationResultRepository>();
         services.AddScoped<IRecommendationSessionRepository, RecommendationSessionRepository>();
-        services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+        services.AddScoped<IRecommendationAttributesRepository, RecommendationAttributesRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAccessTokenService, AccessTokenService>();
