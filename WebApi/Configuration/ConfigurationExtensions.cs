@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Database;
+using Infrastructure.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Configuration
@@ -10,7 +11,9 @@ namespace WebApi.Configuration
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<DTADbContext>();
+                var identityDb = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
                 db.Database.Migrate();
+                identityDb.Database.Migrate();
             }
         }
     }
