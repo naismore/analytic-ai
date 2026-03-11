@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+
+  webapi:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=mydb;Username=postgres;Password=postgres
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: analytic-ai
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

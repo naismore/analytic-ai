@@ -1,7 +1,7 @@
-//using Application;
 using Application;
 using Infrastructure;
 using System.Reflection;
+using WebApi.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,27 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-//    {
-//        options.TokenValidationParameters = new()
-//        {
-//            ValidateIssuer = false,
-//            ValidateAudience = false,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes()),
-//        };
-
-//        options.Events = new JwtBearerEvents
-//        {
-//            OnMessageReceived = context =>
-//            {
-//                context.Token = context.Request.Cookies["access_token"];
-//                return Task.CompletedTask;
-//            }
-//        };
-//    });
 
 var applicationAssembly = typeof(DependencyInitializer).Assembly;
 var webApiAssembly = Assembly.GetExecutingAssembly();
@@ -50,9 +29,7 @@ builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
-//app.ApplyMigrations();
-
-//await app.CreateIdentityRoles();
+app.ApplyMigrations();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

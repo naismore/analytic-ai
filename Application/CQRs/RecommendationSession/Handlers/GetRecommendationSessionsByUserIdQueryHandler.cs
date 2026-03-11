@@ -13,7 +13,7 @@ public class GetRecommendationSessionsByUserIdQueryHandler(
     {
         var recommendationSessions = await recommendationSessionRepository.GetByUserIdAsync(request.UserId);
 
-        var attributesIds = await recommendationAttributesRepository.GetBySessionIdsAsync(recommendationSessions.ToList().Select(x => x.SessionId));
+        var attributesIds = recommendationAttributesRepository.GetBySessionIdsAsync(recommendationSessions.ToList().Select(x => x.SessionId));
         var attributes = await recommendationAttributesRepository.GetByIdsAsync(attributesIds.ToList());
 
         // TODO: Исправить хардкод
