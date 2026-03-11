@@ -1,6 +1,7 @@
 ﻿using Application.CQRs.RecommendationSession.Commands;
 using Application.CQRs.RecommendationSession.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Dtos.RecommendationSession;
 
@@ -11,6 +12,7 @@ namespace WebApi.Controllers
     public class RecommendationSessionController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
+        [Authorize]
         [Route("create-new-rec-session")]
         public async Task<ActionResult> CreateNewRecommendationSession([FromBody] RecommendationSessionDto dto)
         {
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("get-recommendation-sessions/{userId}")]
         public async Task<ActionResult> GetRecommendationSessions([FromQuery] int userId)
         {

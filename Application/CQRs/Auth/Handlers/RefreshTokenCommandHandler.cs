@@ -17,10 +17,10 @@ public class RefreshTokenCommandHandler(
         var storedToken = await refreshTokenRepository.GetByTokenAsync(request.RefreshToken);
         var tokens = await tokenService.RefreshTokensAsync(request.RefreshToken);
 
-        var username = await userIdentityService.GetUserNameAsync(storedToken.User.Id);
+        var username = await userIdentityService.GetUserNameAsync(storedToken.UserId);
 
         return new LoginDto(
-            storedToken.User.Id,
+            storedToken.UserId,
             username,
             tokens.AccessToken,
             tokens.RefreshToken,
