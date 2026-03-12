@@ -6,6 +6,7 @@ using AutoMapper;
 using Domain.Dtos;
 using Domain.Entities;
 using Domain.Interfaces;
+using System.Text.Json;
 
 namespace Application.CQRs.RecommendationSession.Handlers
 {
@@ -36,7 +37,10 @@ namespace Application.CQRs.RecommendationSession.Handlers
             
             var stringResponse = await llmService.SendRequestAsync(llmRequest);
 
-            var recommendations = recommendationParser.Parse(stringResponse);
+            var jsonDoc = JsonDocument.Parse(stringResponse);
+            string text = jsonDoc.RootElement.GetProperty("result").GetString();
+
+            var recommendations = recommendationParser.Parse(text);
 
             // Сохраняем сессию
             var recommendationSessionDto = new Domain.Dtos.RecommendationSessionDto(

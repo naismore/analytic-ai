@@ -8,47 +8,56 @@ public class RecommendationParser : IRecommendationParser
 {
     public List<RecommendationResult> Parse(string text)
     {
-        var results = new List<RecommendationResult>();
+        var list = new List<RecommendationResult>();
 
-        // --- MAIN TOOL ---
-        var mainMatch = Regex.Match(
+        // Основной инструмент
+        var mainToolMatch = Regex.Match(
             text,
-            @"### Основной инструмент\s*(.*?)\s*Причины:\s*((?:- .*\n?)*)",
-            RegexOptions.Singleline);
+            @"### Основной инструмент\s*(.+?)\s*Причины:\s*(.+?)\s*### Альтернативы",
+            RegexOptions.Singleline
+        );
 
-        if (mainMatch.Success)
+        if (mainToolMatch.Success)
         {
-            var toolName = mainMatch.Groups[1].Value.Trim();
+            string toolName = mainToolMatch.Groups[1].Value.Trim();
+            string reasonsRaw = mainToolMatch.Groups[2].Value.Trim();
 
-            var reasons = Regex.Matches(mainMatch.Groups[2].Value, @"- (.*)")
-                .Select(m => m.Groups[1].Value.Trim());
+            string reasoningSummary = string.Join("; ",
+                Regex.Matches(reasonsRaw, @"- (.+)")
+                     .Select(m => m.Groups[1].Value.Trim())
+            );
 
-            var reasoning = string.Join(" ", reasons);
-
-            results.Add(new RecommendationResult
+            list.Add(new RecommendationResult
             {
-                Id = Guid.NewGuid(),
                 ToolName = toolName,
-                ResultType = ResultType.Main,
-                ReasoningSummary = reasoning
+                ResultType = Domain.Entities.ResultType.Main,
+                ReasoningSummary = reasoningSummary
             });
         }
 
-        // --- ALTERNATIVES ---
-        var altMatches = Regex.Matches(
+        // Альтернативы
+        var altSectionMatch = Regex.Match(
             text,
-            @"\d+\.\s*(.*?)\s*—\s*(.*)");
+            @"### Альтернативы\s*(.+?)\s*### Итог",
+            RegexOptions.Singleline
+        );
 
-        foreach (Match match in altMatches)
+        if (altSectionMatch.Success)
         {
-            results.Add(new RecommendationResult
+            string altText = altSectionMatch.Groups[1].Value.Trim();
+
+            var altMatches = Regex.Matches(altText, @"\d+\.\s*(.+?)\s*—\s*(.+)");
+            foreach (Match match in altMatches)
             {
-                Id = Guid.NewGuid(),
-                ToolName = match.Groups[1].Value.Trim(),
-                ResultType = ResultType.Alternative,
-            });
+                list.Add(new RecommendationResult
+                {
+                    ToolName = match.Groups[1].Value.Trim(),
+                    ResultType = Domain.Entities.ResultType.Alternative,
+                    ReasoningSummary = match.Groups[2].Value.Trim()
+                });
+            }
         }
 
-        return results;
+        return list;
     }
 }
