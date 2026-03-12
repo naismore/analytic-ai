@@ -1,0 +1,166 @@
+{
+  "chats": [
+    {
+      "chatId": "chat_1",
+      "title": "Автогенерация API-документации",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "У меня есть контроллеры в ASP.NET Core. Помоги сгенерировать API-документацию по методам и моделям.",
+          "time": "2026-01-27T10:16:20"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Конечно. Пришли, пожалуйста, код контроллера и модели, или укажи путь к проекту.",
+          "time": "2026-01-27T10:16:40"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_2",
+      "title": "Документация из кода",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Сгенерируй описание модуля из этого кода (C#).",
+          "time": "2026-01-26T09:00:00"
+        },
+        {
+          "id": 2,
+          "author": "user",
+          "text": "```csharp\npublic class CacheService {\n    private readonly IDistributedCache _cache;\n    public CacheService(IDistributedCache cache){ _cache = cache; }\n    public async Task SetAsync(string key, string value, TimeSpan ttl) { ... }\n    public async Task<string?> GetAsync(string key){ ... }\n}\n```",
+          "time": "2026-01-26T09:01:10"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_3",
+      "title": "Требования к функционалу",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Сделай список функциональных требований для сервиса: \"AI-помощник по документации\".",
+          "time": "2026-01-25T20:40:00"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Ок. Уточни: нужен ли модуль импорта кода, экспорт в PDF/MD, и поддержка нескольких языков?",
+          "time": "2026-01-25T20:41:15"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_4",
+      "title": "Проверка качества документации",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Проверь, есть ли в этом описании недостающие части: цель, область применения, ограничения.",
+          "time": "2026-01-24T18:12:00"
+        },
+        {
+          "id": 2,
+          "author": "user",
+          "text": "«Сервис сохраняет текст и возвращает оценку по качеству»",
+          "time": "2026-01-24T18:12:40"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_5",
+      "title": "Автоформатирование документации",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Сделай структуру документации в Markdown для микросервиса: Auth, User, Payment.",
+          "time": "2026-01-23T14:05:00"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Сделаю. Нужно ли добавить диаграмму взаимодействия (sequence) и таблицу API?",
+          "time": "2026-01-23T14:05:50"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_6",
+      "title": "Вывод из кода",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Нужно извлечь список всех публичных методов и их параметров из этого файла.",
+          "time": "2026-01-22T11:30:00"
+        },
+        {
+          "id": 2,
+          "author": "user",
+          "text": "```csharp\npublic class UserService {\n  public UserDto GetUser(int id) { ... }\n  public Task CreateUser(CreateUserRequest req) { ... }\n}\n```",
+          "time": "2026-01-22T11:31:00"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_7",
+      "title": "Диаграммы и схемы",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Сгенерируй диаграмму компонентов (Component diagram) для архитектуры: API Gateway, Auth, Data Service, Redis.",
+          "time": "2026-01-21T09:00:00"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Нужно, чтобы диаграмма была в PlantUML или Mermaid?",
+          "time": "2026-01-21T09:00:40"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_8",
+      "title": "Шаблоны документации",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Дай шаблон технического задания (ТЗ) для веб-сервиса с регистрацией и оплатой.",
+          "time": "2026-01-20T19:45:00"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Сделаю. Нужно ли включить разделы: Non-functional requirements, SLA, и security?",
+          "time": "2026-01-20T19:46:30"
+        }
+      ]
+    },
+    {
+      "chatId": "chat_9",
+      "title": "Проверка дубликатов описаний",
+      "messages": [
+        {
+          "id": 1,
+          "author": "user",
+          "text": "Как лучше обнаружить дубликаты похожих описаний функций (похожие формулировки)?",
+          "time": "2026-01-19T08:10:00"
+        },
+        {
+          "id": 2,
+          "author": "bot",
+          "text": "Можно использовать embedding + cosine similarity и хранить в Redis, чтобы быстро искать похожие тексты.",
+          "time": "2026-01-19T08:10:50"
+        }
+      ]
+    }
+  ]
+}
