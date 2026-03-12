@@ -20,7 +20,11 @@ namespace Infrastructure.Repositories
 
         public IReadOnlyCollection<Guid> GetBySessionIds(IEnumerable<Guid> sessionIds)
         {
-            return Entities.Select(x => x.SessionId).ToHashSet().Intersect(sessionIds).ToList();
+            var sessionIdsSet = sessionIds.ToHashSet(); // для быстрого поиска
+            return Entities
+                .Where(x => sessionIdsSet.Contains(x.SessionId)) // пересечение с переданными sessionIds
+                .Select(x => x.Guid) // возвращаем ID аттрибута
+                .ToList();
         }
     }
 }

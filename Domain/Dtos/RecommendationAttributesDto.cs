@@ -6,8 +6,8 @@ public sealed record RecommendationAttributesDto(
     Guid SessionId,
     SkillLevel SkillLevel,
     DataVolume DataVolume,
-    IEnumerable<UserTasks> UserTasks,
+    List<UserTasks> UserTasks,
     Budget Budget,
     TechnicalBackground TechnicalBackground,
-    IEnumerable<Integrations> Integrations
+    List<Integrations> Integrations
     );

@@ -12,7 +12,7 @@ public class GetRecommendationSessionByIdQueryHandler(
     {
         var recommendationAttributeId = recommendationAttributesRepository.GetBySessionIds(new[] { request.SessionId }).First();
         var recommendationAttributes = await recommendationAttributesRepository.GetByIdsAsync(new[] { recommendationAttributeId });
-        var attribute = recommendationAttributes.First();
+        var attribute = recommendationAttributes.ToList().First();
 
         var userTasks = attribute.UserTasks.Select(ut => (int)ut).ToArray();
         var integrations = attribute.Integrations.Select(i => (int)i).ToArray();

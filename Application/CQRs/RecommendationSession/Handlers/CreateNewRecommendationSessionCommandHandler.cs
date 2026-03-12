@@ -20,7 +20,7 @@ namespace Application.CQRs.RecommendationSession.Handlers
             // Здесь делаем запрос к API LLM через свой сервис
 
             // Сохраняем сессию
-            var recommendationSessionDto = new RecommendationSessionDto(
+            var recommendationSessionDto = new Domain.Dtos.RecommendationSessionDto(
                 request.UserId
                 );
 

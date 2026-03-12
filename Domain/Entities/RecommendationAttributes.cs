@@ -9,10 +9,10 @@ namespace Domain.Entities
         public Guid SessionId { get; set; }
         public SkillLevel SkillLevel { get; set; }
         public DataVolume DataVolume { get; set; }
-        public IEnumerable<UserTasks> UserTasks { get; set; }
+        public List<UserTasks> UserTasks { get; set; }
         public Budget Budget { get; set; }
         public TechnicalBackground TechnicalBackground { get; set; }
-        public IEnumerable<Integrations> Integrations { get; set; }
+        public List<Integrations> Integrations { get; set; }
 
         public virtual RecommendationSession Session { get; set; }
 
