@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Your API",
+        Title = "DataToolAdvisor",
         Version = "v1",
         Description = "API для подбора инструментов аналитики"
     });

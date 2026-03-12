@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public IReadOnlyCollection<Guid> GetBySessionIdsAsync(IEnumerable<Guid> sessionIds)
+        public IReadOnlyCollection<Guid> GetBySessionIds(IEnumerable<Guid> sessionIds)
         {
             return Entities.Select(x => x.SessionId).ToHashSet().Intersect(sessionIds).ToList();
         }

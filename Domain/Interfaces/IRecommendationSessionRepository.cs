@@ -5,5 +5,6 @@ namespace Domain.Interfaces
     public interface IRecommendationSessionRepository : IRepository<RecommendationSession>
     {
         Task<IReadOnlyCollection<RecommendationSession>> GetByUserIdAsync(int userId);
+        Task<RecommendationSession?> GetByIdAsync(Guid id);
     }
 }

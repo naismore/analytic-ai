@@ -33,11 +33,22 @@ namespace WebApi.Controllers
         [HttpGet]
         [Authorize]
         [Route("get-recommendation-sessions/{userId}")]
-        public async Task<ActionResult> GetRecommendationSessions([FromQuery] int userId)
+        public async Task<ActionResult> GetRecommendationSessions(int userId)
         {
             var query = new GetRecommendationSessionsByUserIdQuery(userId);
             var dto = await mediator.Send(query);
             return Ok(dto);
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("get-recommendation-session/{sessionId}")]
+        public async Task<ActionResult> GetRecommendationSession(Guid sessionId)
+        {
+            var query = new GetRecommendationSessionByIdQuery(sessionId);
+            var dto = await mediator.Send(query);
+            return Ok(dto);
+        }
+
     }
 }

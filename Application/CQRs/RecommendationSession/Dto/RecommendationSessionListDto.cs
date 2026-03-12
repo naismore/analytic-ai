@@ -1,3 +1,3 @@
 ﻿namespace Application.CQRs.RecommendationSession.Dto;
 
-public sealed record RecommendationSessionListDto(string Name, DateTime CreatedAt);
+public sealed record RecommendationSessionListDto(Guid SessionId, string Name, DateTime CreatedAt);
