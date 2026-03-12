@@ -1,5 +1,4 @@
-﻿using Domain.DTO;
-using Domain.Dtos;
+﻿using Domain.Dtos;
 
 namespace Domain.Entities
 {
@@ -11,6 +10,7 @@ namespace Domain.Entities
         public DataVolume DataVolume { get; set; }
         public List<UserTasks> UserTasks { get; set; }
         public Budget Budget { get; set; }
+        public TeamSize TeamSize { get; set; }
         public TechnicalBackground TechnicalBackground { get; set; }
         public List<Integrations> Integrations { get; set; }
 
@@ -26,6 +26,7 @@ namespace Domain.Entities
                 DataVolume = dto.DataVolume,
                 UserTasks = dto.UserTasks,
                 Budget = dto.Budget,
+                TeamSize = dto.TeamSize,
                 TechnicalBackground = dto.TechnicalBackground,
                 Integrations = dto.Integrations,
             };

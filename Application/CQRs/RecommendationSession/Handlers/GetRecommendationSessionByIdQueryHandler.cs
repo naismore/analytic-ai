@@ -23,6 +23,7 @@ public class GetRecommendationSessionByIdQueryHandler(
             (int)attribute.DataVolume,
             userTasks,
             (int)attribute.Budget,
+            (int)attribute.TeamSize,
             (int)attribute.TechnicalBackground,
             integrations
             );

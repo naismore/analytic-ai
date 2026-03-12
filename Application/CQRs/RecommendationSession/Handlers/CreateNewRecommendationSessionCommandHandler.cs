@@ -29,6 +29,7 @@ namespace Application.CQRs.RecommendationSession.Handlers
                 enumResolver.Resolve((DataVolume)request.DataVolume),
                 userTasksforLLM,
                 enumResolver.Resolve((Budget)request.Budget),
+                enumResolver.Resolve((TeamSize)request.TeamSize),
                 enumResolver.Resolve((TechnicalBackground)request.TechnicalBackground),
                 integrationsforLLM
                 );
@@ -61,6 +62,7 @@ namespace Application.CQRs.RecommendationSession.Handlers
                 (DataVolume)request.DataVolume,
                 userTasks,
                 (Budget)request.Budget,
+                (TeamSize)request.TeamSize,
                 (TechnicalBackground)request.TechnicalBackground,
                 integrations
                 );

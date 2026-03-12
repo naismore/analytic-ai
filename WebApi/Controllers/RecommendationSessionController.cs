@@ -22,6 +22,7 @@ namespace WebApi.Controllers
                 dto.DataVolume,
                 dto.UserTasks,
                 dto.Budget,
+                dto.TeamSize,
                 dto.TechnicalBackground,
                 dto.Integrations
                 );

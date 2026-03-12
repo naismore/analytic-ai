@@ -8,6 +8,7 @@ public sealed record RecommendationAttributesDto(
     DataVolume DataVolume,
     List<UserTasks> UserTasks,
     Budget Budget,
+    TeamSize TeamSize,
     TechnicalBackground TechnicalBackground,
     List<Integrations> Integrations
     );

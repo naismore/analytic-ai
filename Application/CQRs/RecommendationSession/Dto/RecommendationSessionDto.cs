@@ -6,6 +6,7 @@ public sealed record RecommendationSessionDto(
     int DataVolume,
     int[] UserTasks,
     int Budget,
+    int TeamSize,
     int TechnicalBackground,
     int[] Integrations
     );
