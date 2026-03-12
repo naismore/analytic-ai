@@ -9,6 +9,7 @@ namespace Application.CQRs.RecommendationSession.AutoMapper
         public RecomendationResultsProfile()
         {
             CreateMap<RecommendationResult, SessionRecommendationResultsDto>();
+            
         }
     }
 }

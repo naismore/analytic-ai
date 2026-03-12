@@ -1,9 +1,16 @@
-﻿namespace Domain.Entities
+﻿using System.ComponentModel;
+
+namespace Domain.Entities
 {
     public enum Budget
     {
-        Free, // Бесплатно
-        Small, // 100$/мес
-        NotLimited, // Неограничен
+        [Description("Бесплатно")]
+        Free,
+
+        [Description("100$/мес")]
+        Small,
+
+        [Description("Неограничен")]
+        NotLimited
     }
 }

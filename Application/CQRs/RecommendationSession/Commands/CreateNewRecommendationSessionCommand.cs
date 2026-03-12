@@ -1,6 +1,5 @@
 ﻿using Application.Abstract;
 using Application.CQRs.RecommendationSession.Dto;
-using Domain.Entities;
 
 namespace Application.CQRs.RecommendationSession.Commands
 {

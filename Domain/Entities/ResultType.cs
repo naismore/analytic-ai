@@ -2,7 +2,7 @@
 {
     public enum ResultType
     {
-        Main,
+        Main, 
         Alternative
     }
 }

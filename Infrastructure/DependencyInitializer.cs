@@ -8,7 +8,10 @@ using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Models;
 using Infrastructure.Identity.Services;
 using Infrastructure.Identity.Settings;
+using Infrastructure.Parser;
 using Infrastructure.Repositories;
+using Infrastructure.Resolver;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 //using Microsoft.AspNetCore.Identity;
@@ -106,5 +109,11 @@ public static class DependencyInititalizer
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IRefreshTokenService, RefreshTokenService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.AddScoped<ILLMService, LLMService>();
+        services.AddScoped<IRecommendationParser, RecommendationParser>();
+        services.AddScoped<IEnumResolver, EnumResolver>();
+
+        services.AddHttpClient(nameof(LLMService));
     }
 }
