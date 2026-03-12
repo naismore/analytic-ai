@@ -1,11 +1,13 @@
 import { QUESTIONS } from "../../entities/questions"
-import { useQuestionnaireStore } from "../../store/questionnnaire"
+import { useChatStore } from "../../store/chat"
 import { QuestionMessage } from "../../ui/questionMessage"
 import { QuestionProgress } from "../../ui/questionProgress"
 
 export const QuestionnaireModule = () => {
-  const { currentQuestion, answerQuestion, finished } =
-    useQuestionnaireStore()
+  const { chats, activeChatId, answerQuestion } = useChatStore()
+  const activeChat = chats.find(c => c.chatId === activeChatId)
+  const questionnaire = activeChat?.questionnaire ?? { currentQuestion: 0, answers: {}, finished: false }
+  const { currentQuestion, finished } = questionnaire
 
   if (finished) return null
 
@@ -23,6 +25,7 @@ export const QuestionnaireModule = () => {
 
       <div className="p-5 h-[571px]">
         <QuestionMessage
+          key={currentQuestion}
           question={question.question}
           options={question.options}
           multi={question.multi}

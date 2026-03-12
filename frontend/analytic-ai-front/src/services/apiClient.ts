@@ -22,6 +22,8 @@ export async function apiClient<T>(
     ...(headers as Record<string, string> || {})
   }
 
+  console.log(token)
+
   if (auth && token) {
     requestHeaders['Authorization'] = `Bearer ${token}`
   }

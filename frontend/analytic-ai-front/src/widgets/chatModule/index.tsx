@@ -3,16 +3,9 @@ import { ChatHeader } from '../../features/chatHeader'
 import { ChatOverview } from '../../features/chatOverview'
 import { ChatInput } from '../../features/chatInput'
 import { useChatStore } from '../../store/chat'
-import { useQuestionnaireStore } from '../../store/questionnnaire'
 import { useAuthStore } from '../../store/auth'
 import { QuestionnaireModule } from '../questionnaireModule'
-
-type RecommendationResult = {
-  toolName: string
-  confidence: number
-  reasoningSummary: string
-  resultType: number // 0 = Main, 1 = Alternative
-}
+import { recommendationService, type CreateRecSessionRequest, type RecommendationResult } from '../../services/recommendationService'
 
 export const ChatModule = () => {
   const [input, setInput] = useState('')
@@ -20,10 +13,11 @@ export const ChatModule = () => {
   const sentRef = useRef(false)
 
   const { chats, activeChatId, updateChat } = useChatStore()
-  const { finished, answers } = useQuestionnaireStore()
   const { userId } = useAuthStore()
 
   const chat = chats.find((c) => c.chatId === activeChatId) ?? null
+  const questionnaire = chat?.questionnaire ?? { currentQuestion: 0, answers: {}, finished: true }
+  const { finished, answers } = questionnaire
 
   const sendMessage = () => {
     if (!input.trim() || !chat) return
@@ -44,40 +38,43 @@ export const ChatModule = () => {
     setInput('')
   }
 
+  // Сброс флага при смене чата
   useEffect(() => {
-    if (!finished || !chat || !userId || sentRef.current) return
+    sentRef.current = false
+  }, [activeChatId])
 
-    sentRef.current = true
-    setIsLoading(true)
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!chat || !userId || sentRef.current) return
+      if (!finished) return
 
-    const payload = {
-      userId,
-      skillLevel: answers['skillLevel'] as number,
-      dataVolume: answers['dataVolume'] as number,
-      userTasks: answers['userTasks'] as number[],
-      budget: answers['budget'] as number,
-      teamSize: 0,
-      technicalBackground: answers['technicalBackground'] as number,
-      integrations: answers['integrations'] as number[]
-    }
+      // Если уже есть ответы бота (кроме первого приветственного), не отправляем повторно
+      if (chat.messages.length > 1) {
+        sentRef.current = true
+        return
+      }
 
-    fetch('/api/request/create-new-rec-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Ошибка сервера')
-        return res.json() as Promise<RecommendationResult[]>
-      })
-      .then((results) => {
-        const resultLabel = (type: number) =>
-          type === 0 ? 'Основная рекомендация' : 'Альтернатива'
+      sentRef.current = true
+      setIsLoading(true)
+
+      try {
+        const payload: CreateRecSessionRequest = {
+          userId,
+          skillLevel: answers['skillLevel'] as number,
+          dataVolume: answers['dataVolume'] as number,
+          userTasks: answers['userTasks'] as number[],
+          budget: answers['budget'] as number,
+          teamSize: 0,
+          technicalBackground: answers['technicalBackground'] as number,
+          integrations: answers['integrations'] as number[]
+        }
+
+        const results: RecommendationResult[] = await recommendationService.createSession(payload)
 
         const botMessages = results.map((r, i) => ({
           id: chat.messages.length + 1 + i,
           author: 'bot' as const,
-          text: `${resultLabel(r.resultType)}: ${r.toolName} (${Math.round(r.confidence * 100)}%)\n${r.reasoningSummary}`,
+          text: `${r.resultType === 0 ? 'Основная рекомендация' : 'Альтернатива'}: ${r.toolName}. Описание: ${r.reasoningSummary}`,
           time: new Date().toISOString()
         }))
 
@@ -86,8 +83,7 @@ export const ChatModule = () => {
           title: `Сессия ${new Date().toLocaleDateString('ru-RU')}`,
           messages: [...chat.messages, ...botMessages]
         })
-      })
-      .catch(() => {
+      } catch (err) {
         updateChat({
           ...chat,
           messages: [
@@ -100,9 +96,13 @@ export const ChatModule = () => {
             }
           ]
         })
-      })
-      .finally(() => setIsLoading(false))
-  }, [finished])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchRecommendations()
+  }, [finished, chat, userId, answers, updateChat])
 
   if (!chat) {
     return (

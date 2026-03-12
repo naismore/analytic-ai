@@ -1,3 +1,9 @@
+export type QuestionnaireData = {
+  currentQuestion: number;
+  answers: Record<string, number | number[]>;
+  finished: boolean;
+};
+
 export type MessageType = {
   id: number;
   author: "user" | "bot";
@@ -9,4 +15,5 @@ export type ChatType = {
   chatId: string;
   title: string;
   messages: MessageType[];
+  questionnaire?: QuestionnaireData;
 };

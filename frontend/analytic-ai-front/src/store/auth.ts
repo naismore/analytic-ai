@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { authService } from '../services/authService'
+import { useChatStore } from './chat'
 
 type AuthState = {
   userId: number | null
@@ -14,7 +15,6 @@ type AuthState = {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-
   userId: null,
   userName: null,
   accessToken: null,
@@ -22,12 +22,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: async (username, password) => {
     const data = await authService.login(username, password)
-
     set({
       userId: data.userId,
       userName: data.userName,
       accessToken: data.accessToken
-    })
+    });
+
+    // загружаем историю чатов после успешного входа
+    useChatStore.getState().loadChatsFromServer(data.userId)
   },
 
   register: async (username, password) => {
@@ -37,29 +39,36 @@ export const useAuthStore = create<AuthState>((set) => ({
   refresh: async () => {
     try {
       const data = await authService.refresh()
-
       set({
         userId: data.userId,
         userName: data.userName,
         accessToken: data.accessToken,
         initialized: true
-      })
+      });
+
+      // загружаем историю чатов после refresh
+      useChatStore.getState().loadChatsFromServer(data.userId)
     } catch {
-      // если refresh не прошёл — очищаем state и ставим initialized
       set({
         userId: null,
         userName: null,
         accessToken: null,
         initialized: true
-      })
+      });
+
+      // очистка чатов при неудачном refresh
+      useChatStore.getState().clearChats()
     }
   },
 
-  logout: () =>
+  logout: () => {
     set({
       userId: null,
       userName: null,
       accessToken: null
     })
 
+    // очищаем историю чатов
+    useChatStore.getState().clearChats()
+  }
 }))
