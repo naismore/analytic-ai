@@ -2,8 +2,11 @@ using Application;
 using Infrastructure;
 using Infrastructure.Identity.Seed;
 using Microsoft.OpenApi.Models;
+using QuestPDF.Infrastructure;
 using System.Reflection;
 using WebApi.Configuration;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 

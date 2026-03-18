@@ -8,5 +8,6 @@ public sealed record RecommendationSessionDto(
     int Budget,
     int TeamSize,
     int TechnicalBackground,
-    int[] Integrations
+    int[] Integrations,
+    SessionRecommendationResultsDto[] Results
     );

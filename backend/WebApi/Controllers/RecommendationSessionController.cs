@@ -1,4 +1,5 @@
-﻿using Application.CQRs.RecommendationSession.Commands;
+﻿using Application.CQRs.PDF.Queries;
+using Application.CQRs.RecommendationSession.Commands;
 using Application.CQRs.RecommendationSession.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +50,15 @@ namespace WebApi.Controllers
             var query = new GetRecommendationSessionByIdQuery(sessionId);
             var dto = await mediator.Send(query);
             return Ok(dto);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("export-pdf/{sessionId}")]
+        public async Task<IActionResult> ExportPdf(Guid sessionId)
+        {
+            var pdfBytes = await mediator.Send(new ExportRecommendationPdfQuery(sessionId));
+            return File(pdfBytes, "application/pdf", $"recommendations_{sessionId}.pdf");
         }
 
     }

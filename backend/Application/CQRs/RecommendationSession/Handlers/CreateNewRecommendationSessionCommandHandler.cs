@@ -3,88 +3,76 @@ using Application.CQRs.RecommendationSession.Commands;
 using Application.CQRs.RecommendationSession.Dto;
 using Application.Models;
 using AutoMapper;
-using Domain.Dtos;
 using Domain.Entities;
 using Domain.Interfaces;
 using System.Text.Json;
 
-namespace Application.CQRs.RecommendationSession.Handlers
+namespace Application.CQRs.RecommendationSession.Handlers;
+
+public class CreateNewRecommendationSessionCommandHandler(
+    IRecommendationSessionRepository sessionRepository,
+    IRecommendationAttributesRepository attributesRepository,
+    IRecommendationResultRepository resultRepository,
+    IMapper mapper,
+    ILLMService llmService,
+    IEnumResolver enumResolver,
+    IRecommendationParser parser
+) : ICommandHandler<CreateNewRecommendationSessionCommand, IReadOnlyCollection<SessionRecommendationResultsDto>>
 {
-    public class CreateNewRecommendationSessionCommandHandler(
-        IRecommendationSessionRepository recommendationSessionRepository,
-        IRecommendationResultRepository recommendationResultRepository,
-        IRecommendationAttributesRepository recommendationAttributesRepository,
-        IMapper mapper,
-        ILLMService llmService,
-        IEnumResolver enumResolver,
-        IRecommendationParser recommendationParser
-        ) : ICommandHandler<CreateNewRecommendationSessionCommand, IReadOnlyCollection<SessionRecommendationResultsDto>>
+    public async Task<IReadOnlyCollection<SessionRecommendationResultsDto>> Handle(
+        CreateNewRecommendationSessionCommand request,
+        CancellationToken cancellationToken)
     {
-        public async Task<IReadOnlyCollection<SessionRecommendationResultsDto>> Handle(CreateNewRecommendationSessionCommand request, CancellationToken cancellationToken)
+        // Подготовка запроса для LLM
+        var llmRequest = new LLMRequest(
+            enumResolver.Resolve((SkillLevel)request.SkillLevel),
+            enumResolver.Resolve((DataVolume)request.DataVolume),
+            request.UserTasks.Select(ut => enumResolver.Resolve((UserTasks)ut)).ToArray(),
+            enumResolver.Resolve((Budget)request.Budget),
+            enumResolver.Resolve((TeamSize)request.TeamSize),
+            enumResolver.Resolve((TechnicalBackground)request.TechnicalBackground),
+            request.Integrations.Select(i => enumResolver.Resolve((Integrations)i)).ToArray()
+        );
+
+        var llmResponse = await llmService.SendRequestAsync(llmRequest);
+
+        var jsonDoc = JsonDocument.Parse(llmResponse);
+        string text = jsonDoc.RootElement.GetProperty("result").GetString();
+
+        // Парсим рекомендации
+        var recommendations = parser.Parse(text);
+
+        // Создаем сессию через Domain
+        var session = Domain.Entities.RecommendationSession.Create(request.UserId);
+        await sessionRepository.InsertAsync(session);
+        await sessionRepository.SaveChangesAsync();
+
+        // Создаем атрибуты через Domain
+        var attributes = RecommendationAttributes.Create(
+            session.SessionId,
+            (SkillLevel)request.SkillLevel,
+            (DataVolume)request.DataVolume,
+            request.UserTasks.Select(ut => (UserTasks)ut),
+            (Budget)request.Budget,
+            (TeamSize)request.TeamSize,
+            (TechnicalBackground)request.TechnicalBackground,
+            request.Integrations.Select(i => (Integrations)i)
+        );
+
+        await attributesRepository.InsertAsync(attributes);
+        await attributesRepository.SaveChangesAsync();
+
+        // Сохраняем результаты
+        foreach (var rec in recommendations)
         {
-            var userTasksforLLM = request.UserTasks.ToList().Select(ut => enumResolver.Resolve((UserTasks)ut)).ToArray();
-            var integrationsforLLM = request.Integrations.ToList().Select(i => enumResolver.Resolve((Integrations)i)).ToArray();
-
-            LLMRequest llmRequest = new LLMRequest(
-                enumResolver.Resolve((SkillLevel)request.SkillLevel),
-                enumResolver.Resolve((DataVolume)request.DataVolume),
-                userTasksforLLM,
-                enumResolver.Resolve((Budget)request.Budget),
-                enumResolver.Resolve((TeamSize)request.TeamSize),
-                enumResolver.Resolve((TechnicalBackground)request.TechnicalBackground),
-                integrationsforLLM
-                );
-            
-            var stringResponse = await llmService.SendRequestAsync(llmRequest);
-
-            var jsonDoc = JsonDocument.Parse(stringResponse);
-            string text = jsonDoc.RootElement.GetProperty("result").GetString();
-
-            var recommendations = recommendationParser.Parse(text);
-
-            // Сохраняем сессию
-            var recommendationSessionDto = new Domain.Dtos.RecommendationSessionDto(
-                request.UserId
-                );
-
-            var recommendationSession = Domain.Entities.RecommendationSession.Create(recommendationSessionDto);
-
-            await recommendationSessionRepository.InsertAsync(recommendationSession);
-            await recommendationSessionRepository.SaveChangesAsync();
-
-            if (recommendationSession.SessionId == Guid.Empty)
-                throw new Exception("Не удалось добавить recommendationSession");
-
-            List<UserTasks> userTasks = request.UserTasks.ToList().Select(ut => (UserTasks)ut).ToList();
-            List<Integrations> integrations = request.Integrations.ToList().Select(i => (Integrations)i).ToList();
-
-
-            // Сохраняем аттрибуты
-            var recommendationAttributesDto = new RecommendationAttributesDto(
-                recommendationSession.SessionId,
-                (SkillLevel)request.SkillLevel,
-                (DataVolume)request.DataVolume,
-                userTasks,
-                (Budget)request.Budget,
-                (TeamSize)request.TeamSize,
-                (TechnicalBackground)request.TechnicalBackground,
-                integrations
-                );
-
-            var recommendationAttributes = RecommendationAttributes.Create(recommendationAttributesDto);
-            await recommendationAttributesRepository.InsertAsync(recommendationAttributes);
-            await recommendationAttributesRepository.SaveChangesAsync();
-           
-
-            foreach(var rec in recommendations)
-            {
-                rec.SessionId = Guid.NewGuid();
-                await recommendationResultRepository.InsertAsync(rec);
-            }
-
-            var recommendationsDto = recommendations.Select(x => mapper.Map<SessionRecommendationResultsDto>(x)).ToList();
-
-            return recommendationsDto;
+            rec.SessionId = session.SessionId; // связываем сессией
+            await resultRepository.InsertAsync(rec);
         }
+        await resultRepository.SaveChangesAsync();
+
+        // Маппинг для ответа
+        return recommendations
+            .Select(mapper.Map<SessionRecommendationResultsDto>)
+            .ToList();
     }
 }

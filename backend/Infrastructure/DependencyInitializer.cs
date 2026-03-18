@@ -1,4 +1,6 @@
 ﻿using Application.Abstract;
+using Application.CQRs.PDF.Dto;
+using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Authentication.Repositories;
 using Infrastructure.Authentication.Services;
@@ -113,7 +115,11 @@ public static class DependencyInititalizer
         services.AddScoped<ILLMService, LLMService>();
         services.AddScoped<IRecommendationParser, RecommendationParser>();
         services.AddScoped<IEnumResolver, EnumResolver>();
+        services.AddScoped<IPdfBuilder<RecommendationPdfModel>, RecommendationPdfBuilder>();
 
-        services.AddHttpClient(nameof(LLMService));
+        services.AddHttpClient(nameof(LLMService), client =>
+        {
+            client.Timeout = Timeout.InfiniteTimeSpan;
+        });
     }
 }

@@ -31,7 +31,7 @@ public class RecommendationParser : IRecommendationParser
             {
                 ToolName = toolName,
                 ResultType = Domain.Entities.ResultType.Main,
-                ReasoningSummary = reasoningSummary
+                ReasoningSummary = reasoningSummary,
             });
         }
 

@@ -1,25 +1,23 @@
-﻿using Domain.Dtos;
+﻿namespace Domain.Entities;
 
-namespace Domain.Entities
+public class RecommendationSession
 {
-    public class RecommendationSession
+    public Guid SessionId { get; private set; }
+    public int UserId { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+
+    private RecommendationSession(int userId)
     {
-        public Guid SessionId { get; set; }
-        public int UserId { get; set; }
+        UserId = userId;
+        CreatedAt = DateTime.UtcNow;
+        SessionId = Guid.NewGuid();
+    }
 
-        public DateTime CreatedAt { get; set; }
+    public static RecommendationSession Create(int userId)
+    {
+        if (userId <= 0)
+            throw new ArgumentException("UserId должен быть положительным", nameof(userId));
 
-        public virtual User User { get; set; }
-
-        public virtual List<RecommendationResult> Results { get; set; }
-
-        public static RecommendationSession Create(RecommendationSessionDto recommendationSessionDto)
-        {
-            return new RecommendationSession
-            {
-                UserId = recommendationSessionDto.UserId,
-                CreatedAt = DateTime.UtcNow,
-            };
-        }
+        return new RecommendationSession(userId);
     }
 }
