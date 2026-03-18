@@ -9,11 +9,15 @@ export type MessageType = {
   author: "user" | "bot";
   text: string;
   time: string;
+  isHtml: boolean;
+  sessionId: string | null;
 };
 
 export type ChatType = {
   chatId: string;
   title: string;
   messages: MessageType[];
+  createdAt?: string;
   questionnaire?: QuestionnaireData;
+  sessionCreated?: boolean; // <--- новый флаг
 };

@@ -23,8 +23,8 @@ export const ChatHistory = () => {
               }`}
             >
               <span>
-                {lastMessage
-                  ? new Date(lastMessage.time).toLocaleDateString("ru-RU", {
+                {chat.createdAt
+                  ? new Date(chat.createdAt).toLocaleDateString("ru-RU", {
                       day: "2-digit",
                       month: "2-digit"
                     })

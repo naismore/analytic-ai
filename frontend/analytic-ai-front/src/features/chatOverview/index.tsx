@@ -34,8 +34,11 @@ export const ChatOverview = ({ messages, isLoading }: { messages: MessageType[];
                 : "bg-[#111827] border border-[#2b2f3b]"
             }`}
           >
-
-            {m.text}
+            {m.isHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: m.text }} />
+            ) : (
+              <p>{m.text}</p>
+            )}
 
             <div className="text-[11px] text-[#b7b7c8] absolute bottom-2 right-4">
               {new Date(m.time).toLocaleTimeString([], {
@@ -44,10 +47,7 @@ export const ChatOverview = ({ messages, isLoading }: { messages: MessageType[];
               })}
             </div>
 
-            {m.author === "bot" && (
-              <MessageFeedback messageId={m.id} />
-            )}
-
+            {m.author === "bot" && <MessageFeedback messageId={m.id} />}
           </div>
         ))}
 

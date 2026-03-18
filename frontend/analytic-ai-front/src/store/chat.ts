@@ -58,14 +58,17 @@ export const useChatStore = create<ChatStore>()(
                 id: 1,
                 author: "bot",
                 text: "✅ Вы ответили на все вопросы. Размышляю, что вам предложить...",
-                time: new Date().toISOString()
+                time: new Date().toISOString(),
+                isHtml: false,
+                sessionId: null
               }
             ],
             questionnaire: {
               currentQuestion: 0,
               answers: {},
               finished: false
-            }
+            },
+            sessionCreated: false
           };
           return {
             chats: sortByLastMessage([newChat, ...state.chats]),
@@ -101,24 +104,19 @@ export const useChatStore = create<ChatStore>()(
       loadChatsFromServer: async (userId: number) => {
         try {
           const sessions = await recommendationService.getSessionsList(userId);
-          
-          // Преобразуем сессии в формат ChatType
-          const chats: ChatType[] = sessions.map((s, index) => ({
+
+          // Создаем массив чатов без подгрузки сообщений
+          const chats: ChatType[] = sessions.map((s) => ({
             chatId: s.sessionId,
-            title: s.sessionName,
-            messages: [
-              {
-                id: 1,
-                author: "bot",
-                text: `Сессия создана ${new Date(s.createdAt).toLocaleString('ru-RU')}`,
-                time: s.createdAt
-              }
-            ],
+            title: s.name || 'Без названия',
+            messages: [], // подгружается отдельно
+            createdAt: s.createdAt, // <- добавляем поле
             questionnaire: {
               currentQuestion: 0,
               answers: {},
               finished: true
-            }
+            },
+            sessionCreated: true // <--- чтобы createSession не срабатывал
           }));
 
           set({

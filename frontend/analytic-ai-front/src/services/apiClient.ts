@@ -6,14 +6,14 @@ const BASE_URL = '/api'
 type RequestOptions = RequestInit & {
   auth?: boolean
   retry?: boolean
+  responseType?: 'json' | 'blob' // <-- добавили поддержку blob
 }
 
 export async function apiClient<T>(
   endpoint: string,
   options: RequestOptions = {}
 ): Promise<T> {
-
-  const { auth = true, retry = true, headers, ...rest } = options
+  const { auth = true, retry = true, headers, responseType = 'json', ...rest } = options
 
   const token = useAuthStore.getState().accessToken
 
@@ -21,8 +21,6 @@ export async function apiClient<T>(
     'Content-Type': 'application/json',
     ...(headers as Record<string, string> || {})
   }
-
-  console.log(token)
 
   if (auth && token) {
     requestHeaders['Authorization'] = `Bearer ${token}`
@@ -34,29 +32,36 @@ export async function apiClient<T>(
     credentials: 'include'
   })
 
+  // --- обновляем токен если 401 ---
   if (res.status === 401 && retry) {
-  try {
-    const data = await authService.refresh() // auth: false, retry: false
+    try {
+      const data = await authService.refresh() // auth: false, retry: false
 
-    useAuthStore.setState({
-      userId: data.userId,
-      userName: data.userName,
-      accessToken: data.accessToken
-    })
+      useAuthStore.setState({
+        userId: data.userId,
+        userName: data.userName,
+        accessToken: data.accessToken
+      })
 
-    // повторяем оригинальный запрос один раз
-    return apiClient<T>(endpoint, { ...options, retry: false })
-  } catch {
-    useAuthStore.getState().logout()
-    throw new Error('Session expired')
+      return apiClient<T>(endpoint, { ...options, retry: false })
+    } catch {
+      useAuthStore.getState().logout()
+      throw new Error('Session expired')
+    }
   }
-}
+
   if (!res.ok) {
     const text = await res.text()
     throw new Error(text || 'API Error')
   }
 
-  // --- если тело пустое, возвращаем undefined ---
+  // --- если нужно получить blob (для PDF) ---
+  if (responseType === 'blob') {
+    const blob = await res.blob()
+    return blob as unknown as T
+  }
+
+  // --- обычный JSON ---
   const text = await res.text()
   return text ? JSON.parse(text) : undefined as unknown as T
 }
