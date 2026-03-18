@@ -1,0 +1,42 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_TOP_DOWN()
+
+title C4 Deployment Diagram (Draft)
+
+' === CLIENT ===
+Deployment_Node(client, "Client", "Browser / Frontend") {
+    Container(client_app, "SPA / Frontend App", "React / Vue / etc.", "Calls Web API via HTTPS")
+}
+
+' === SERVER ===
+Deployment_Node(server, "Application Server", "Docker Host / VM") {
+
+    Deployment_Node(webapi_container, "WebApi Container", "ASP.NET Core") {
+        Container(webapi, "Web API", "ASP.NET Core", "Controllers + MediatR + CQRS")
+    }
+
+    Deployment_Node(llm_container, "LLM Service Container", "Python FastAPI") {
+        Container(llm_service, "LLM Service", "Python", "Generates recommendations")
+    }
+}
+
+' === DATABASES ===
+Deployment_Node(db_server, "Database Server", "PostgreSQL / SQL Server") {
+
+    ContainerDb(app_db, "DTADb", "Relational DB", "Business data")
+
+    ContainerDb(identity_db, "IdentityDb", "Relational DB", "Users, Roles, Auth")
+}
+
+' === RELATIONSHIPS ===
+
+Rel(client_app, webapi, "HTTPS / REST")
+
+Rel(webapi, app_db, "EF Core (DTADbContext)")
+Rel(webapi, identity_db, "Identity (AppIdentityDbContext)")
+
+Rel(webapi, llm_service, "HTTP / JSON")
+
+@enduml
