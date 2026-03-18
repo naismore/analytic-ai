@@ -11,6 +11,7 @@ import {
 } from '../../services/recommendationService';
 
 import { renderUserAnswers } from '../../utils/userAnswersMapper';
+import { getChatTitle } from '../../utils/chatTitle';
 
 export const ChatModule = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -117,9 +118,10 @@ export const ChatModule = () => {
 
         updateChat({
           ...chat,
-          title: `Сессия ${new Date().toLocaleDateString('ru-RU')}`,
+          title: getChatTitle(answers['userTasks'] as number[]), // <-- новый заголовок
           messages: [botMessage],
-          sessionCreated: true
+          sessionCreated: true,
+          createdAt: new Date().toISOString(),
         });
       } catch (err) {
         console.error('Ошибка при создании рекомендаций:', err);
