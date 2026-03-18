@@ -1,0 +1,53 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_TOP_DOWN()
+title Maintenance / Deployment Guide
+
+' ===== ENVIRONMENTS =====
+Deployment_Node(dev, "Dev Environment", "Local Machine") {
+    Container(dev_app, "WebAPI (Dev)", ".NET + Docker", "Local development")
+    Container(dev_llm, "LLM Service (Dev)", "Python", "Local testing")
+}
+
+Deployment_Node(ci, "CI/CD", "GitHub Actions / GitLab CI") {
+    Container(ci_pipeline, "Pipeline", "Build/Test/Deploy", "Automated pipeline")
+}
+
+Deployment_Node(prod, "Production Server", "Docker Host / Cloud VM") {
+
+    Deployment_Node(prod_web, "WebAPI Container", "ASP.NET Core") {
+        Container(webapi, "Web API", ".NET", "Main backend")
+    }
+
+    Deployment_Node(prod_llm, "LLM Container", "Python FastAPI") {
+        Container(llm, "LLM Service", "Python", "Recommendations engine")
+    }
+
+    Deployment_Node(prod_db, "Database", "PostgreSQL / SQL Server") {
+        ContainerDb(app_db, "DTADb", "Business Data", "")
+        ContainerDb(identity_db, "IdentityDb", "Auth Data", "")
+    }
+}
+
+' ===== FLOW: DEPLOYMENT =====
+Rel(dev_app, ci_pipeline, "Push code")
+Rel(ci_pipeline, webapi, "Deploy (Docker image)")
+Rel(ci_pipeline, llm, "Deploy (Docker image)")
+
+' ===== RUNTIME =====
+Rel(webapi, app_db, "EF Core")
+Rel(webapi, identity_db, "Identity")
+Rel(webapi, llm, "HTTP")
+
+' ===== MAINTENANCE =====
+Deployment_Node(ops, "Operations", "Admin / DevOps") {
+    Container(ops_tools, "Ops Tools", "CLI / Monitoring", "Logs, migrations, restart")
+}
+
+Rel(ops_tools, webapi, "Restart / Logs")
+Rel(ops_tools, llm, "Restart / Logs")
+Rel(ops_tools, app_db, "Migrations / Backup")
+Rel(ops_tools, identity_db, "Migrations / Backup")
+
+@enduml
