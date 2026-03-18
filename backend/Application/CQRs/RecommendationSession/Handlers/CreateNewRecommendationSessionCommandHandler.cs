@@ -17,9 +17,9 @@ public class CreateNewRecommendationSessionCommandHandler(
     ILLMService llmService,
     IEnumResolver enumResolver,
     IRecommendationParser parser
-) : ICommandHandler<CreateNewRecommendationSessionCommand, IReadOnlyCollection<SessionRecommendationResultsDto>>
+) : ICommandHandler<CreateNewRecommendationSessionCommand, RecommendationSessionResponseDto>
 {
-    public async Task<IReadOnlyCollection<SessionRecommendationResultsDto>> Handle(
+    public async Task<RecommendationSessionResponseDto> Handle(
         CreateNewRecommendationSessionCommand request,
         CancellationToken cancellationToken)
     {
@@ -71,8 +71,8 @@ public class CreateNewRecommendationSessionCommandHandler(
         await resultRepository.SaveChangesAsync();
 
         // Маппинг для ответа
-        return recommendations
+        return new RecommendationSessionResponseDto(session.SessionId, recommendations
             .Select(mapper.Map<SessionRecommendationResultsDto>)
-            .ToList();
+            .ToArray());
     }
 }

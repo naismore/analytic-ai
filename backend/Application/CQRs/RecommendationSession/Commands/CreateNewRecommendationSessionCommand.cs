@@ -12,4 +12,4 @@ public sealed record CreateNewRecommendationSessionCommand(
     int TeamSize,
     int TechnicalBackground,
     int[] Integrations
-    ) : ICommand<IReadOnlyCollection<SessionRecommendationResultsDto>>;
+    ) : ICommand<RecommendationSessionResponseDto>;

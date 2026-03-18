@@ -16,8 +16,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="CQRs\Admin\Queries\" />
-	  <Folder Include="CQRs\Admin\Dtos\" />
 	  <Folder Include="CQRs\Feedback\Queries\" />
 	  <Folder Include="CQRs\Feedback\Dtos\" />
 	</ItemGroup>
